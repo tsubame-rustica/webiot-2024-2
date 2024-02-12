@@ -1,29 +1,32 @@
-import time
+#coding:utf-8
+
+#GPIOライブラリをインポート
 import RPi.GPIO as GPIO
 
-#モータードライバー関連は右リンク参照 https://creators-small-room.hatenablog.com/entry/motor-driver
+#timeライブラリをインポート
+import time
 
 #ピン番号の割り当て方式を「コネクタのピン番号」に設定
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 
-#使用するピン番号を代入
+
+# 使用するピン番号を代入
 AIN1 = 8
-AIN2 = 10
+AIN2 = 7
 PWMA = 12
 
-BIN1 = 22
-BIN2 = 24
+BIN1 = 10
+BIN2 = 9
 PWMB = 26
 
 
-# AIN1_2 = 8
-# AIN2_2 = 10
-# PWMA_2 = 12
+AIN1 = 8
+AIN2 = 7
+PWMA = 12
 
-# BIN1_2 = 22
-# BIN2_2 = 24
-# PWMB_2 = 26
-
+BIN1 = 10
+BIN2 = 9
+PWMB = 26
 
 #各ピンを出力ピンに設定
 GPIO.setup(AIN1, GPIO.OUT, initial = GPIO.LOW)
@@ -34,32 +37,14 @@ GPIO.setup(BIN1, GPIO.OUT, initial = GPIO.LOW)
 GPIO.setup(BIN2, GPIO.OUT, initial = GPIO.LOW)
 GPIO.setup(PWMB, GPIO.OUT, initial = GPIO.LOW)
 
-
-
-GPIO.setup(AIN1_2, GPIO.OUT, initial = GPIO.LOW)
-GPIO.setup(AIN2_2, GPIO.OUT, initial = GPIO.LOW)
-GPIO.setup(PWMA_2, GPIO.OUT, initial = GPIO.LOW)
-
-GPIO.setup(BIN1_2, GPIO.OUT, initial = GPIO.LOW)
-GPIO.setup(BIN2_2, GPIO.OUT, initial = GPIO.LOW)
-GPIO.setup(PWMB_2, GPIO.OUT, initial = GPIO.LOW)
-
-
 #PWMオブジェクトのインスタンスを作成
 #出力ピン：12,26  周波数：100Hz
 p_a = GPIO.PWM(PWMA,100)
 p_b = GPIO.PWM(PWMB,100)
 
-p_a_2 = GPIO.PWM(PWMA_2,100)
-p_b_2 = GPIO.PWM(PWMB_2,100)
-
-
 #PWM信号を出力
 p_a.start(0)
 p_b.start(0)
-
-p_a_2.start(0)
-p_b_2.start(0)
 
 #デューティを設定(0~100の範囲で指定)
 #速度は80%で走行する。
@@ -69,21 +54,12 @@ val = 80
 p_a.ChangeDutyCycle(val)
 p_b.ChangeDutyCycle(val)
 
-p_a_2.ChangeDutyCycle(val)
-p_b_2.ChangeDutyCycle(val)
-
 #ブレーキする関数
 def func_brake():
     GPIO.output(AIN1, GPIO.HIGH)
     GPIO.output(AIN2, GPIO.HIGH)
     GPIO.output(BIN1, GPIO.HIGH)
     GPIO.output(BIN2, GPIO.HIGH)
-
-
-    GPIO.output(AIN1_2, GPIO.HIGH)
-    GPIO.output(AIN2_2, GPIO.HIGH)
-    GPIO.output(BIN1_2, GPIO.HIGH)
-    GPIO.output(BIN2_2, GPIO.HIGH)
 
 
 #前進する関数
@@ -93,11 +69,6 @@ def func_forward():
     GPIO.output(BIN1, GPIO.LOW)
     GPIO.output(BIN2, GPIO.HIGH)
 
-    GPIO.output(AIN1_2, GPIO.LOW)
-    GPIO.output(AIN2_2, GPIO.HIGH)
-    GPIO.output(BIN1_2, GPIO.LOW)
-    GPIO.output(BIN2_2, GPIO.HIGH)
-
 
 #後進する関数
 def func_back():
@@ -105,11 +76,6 @@ def func_back():
     GPIO.output(AIN2, GPIO.LOW)
     GPIO.output(BIN1, GPIO.HIGH)
     GPIO.output(BIN2, GPIO.LOW)
-
-    GPIO.output(AIN1_2, GPIO.HIGH)
-    GPIO.output(AIN2_2, GPIO.LOW)
-    GPIO.output(BIN1_2, GPIO.HIGH)
-    GPIO.output(BIN2_2, GPIO.LOW)
 
 
 #右回転する関数
@@ -119,11 +85,6 @@ def func_right():
     GPIO.output(BIN1, GPIO.HIGH)
     GPIO.output(BIN2, GPIO.LOW)
 
-    GPIO.output(AIN1_2, GPIO.LOW)
-    GPIO.output(AIN2_2, GPIO.HIGH)
-    GPIO.output(BIN1_2, GPIO.HIGH)
-    GPIO.output(BIN2_2, GPIO.LOW)
-
 
 #左回転する関数
 def func_left():
@@ -132,21 +93,37 @@ def func_left():
     GPIO.output(BIN1, GPIO.LOW)
     GPIO.output(BIN2, GPIO.HIGH)
 
-    GPIO.output(AIN1_2, GPIO.HIGH)
-    GPIO.output(AIN2_2, GPIO.LOW)
-    GPIO.output(BIN1_2, GPIO.LOW)
-    GPIO.output(BIN2_2, GPIO.HIGH)
+
+#メインプログラム
+while True:
+        
+    #3秒前進する
+    func_forward()
+    time.sleep(3.0)
+
+    
 
 
+    #3秒後進する
+    func_back()
+    time.sleep(3.0)
 
-# reset
-def clear():
+    func_right()
+    time.sleep(3.0)
 
-    p_a.stop()
-    p_b.stop()
+    func_left()
+    time.sleep(3.0)
+    #3秒ブレーキ
+    
+    break
+    
 
-    p_a_2.stop()
-    p_b_2.stop()
+#PWM信号を停止
+p_a.stop()
+p_b.stop()
 
-    #GPIOを開放
-    GPIO.cleanup()
+#GPIOを開放
+GPIO.cleanup()
+
+#プログラム終了
+print("End of program")
