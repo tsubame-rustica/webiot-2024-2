@@ -37,7 +37,7 @@ function sendMessage(){
 }
 
 function sendAction(move) {
-    const msg = [0, move];
+    const msg = [1, move+1];
     console.log("Send : " + msg[1]);
     webSocket.send(msg);
 }
