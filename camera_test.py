@@ -10,7 +10,8 @@ cap = cv2.VideoCapture(camera_id)
 
 # バーコードの値を取得するだけならimshowなどは不要
 def detect_barcode(delay, window_name, cap):
-    while True:
+    s = 0
+    for i in range(3):
         ret, frame = cap.read()
 
         if ret:
@@ -19,15 +20,15 @@ def detect_barcode(delay, window_name, cap):
                 #print(s)
                 frame = cv2.rectangle(frame, (d.rect.left, d.rect.top), (d.rect.left + d.rect.width, d.rect.top + d.rect.height), (0, 255, 0), 3)
                 frame = cv2.putText(frame, s, (d.rect.left, d.rect.top + d.rect.height), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 2, cv2.LINE_AA)
-            cv2.imshow(window_name, frame)
+            # cv2.imshow(window_name, frame)
 
         if cv2.waitKey(delay) & 0xFF == ord('q'):
             break
 
-    # return s
+    return ret, s
 
 detect_barcode(delay, window_name, cap)
 
 # clear
 cap.release()
-cv2.destroyWindow(window_name)
+# cv2.destroyWindow(window_name)
