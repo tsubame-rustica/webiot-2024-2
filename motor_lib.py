@@ -11,13 +11,7 @@ GPIO.setmode(GPIO.BCM)
 
 
 # 使用するピン番号を代入
-AIN1 = 8
-AIN2 = 7
-PWMA = 12
 
-BIN1 = 10
-BIN2 = 9
-PWMB = 26
 
 
 AIN1 = 8
@@ -94,36 +88,39 @@ def func_left():
     GPIO.output(BIN2, GPIO.HIGH)
 
 
-#メインプログラム
-while True:
+def debug_test():
+    while True:
+            
+        #3秒前進する
+        func_forward()
+        time.sleep(3.0)
+
         
-    #3秒前進する
-    func_forward()
-    time.sleep(3.0)
-
-    
 
 
-    #3秒後進する
-    func_back()
-    time.sleep(3.0)
+        #3秒後進する
+        func_back()
+        time.sleep(3.0)
 
-    func_right()
-    time.sleep(3.0)
+        func_right()
+        time.sleep(3.0)
 
-    func_left()
-    time.sleep(3.0)
-    #3秒ブレーキ
-    
-    break
-    
+        func_left()
+        time.sleep(3.0)
+        #3秒ブレーキ
+        
+        break
+        
 
-#PWM信号を停止
-p_a.stop()
-p_b.stop()
 
-#GPIOを開放
-GPIO.cleanup()
+def end_clear():
+        
+    #PWM信号を停止
+    p_a.stop()
+    p_b.stop()
 
-#プログラム終了
-print("End of program")
+    #GPIOを開放
+    GPIO.cleanup()
+
+    #プログラム終了
+    print("End of program")
