@@ -23,7 +23,9 @@ def linetrace():
             print(data)
         val, id = camera_test.detect_barcode()
 
-        if data[0] == data[1] == 1:
+        if data[0] == 1 and data[1] == 2:
+            motor_lib.func_brake()
+        if data[0] == 1 and data[1] == 1:
             if GPIO.input(SENSOR1) == GPIO.HIGH and GPIO.input(SENSOR2) == GPIO.HIGH:
                 # 直進
                 motor_lib.func_forward()
